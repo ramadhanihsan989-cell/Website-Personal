@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kuis Agama Islam</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: linear-gradient(to right, #4caf50, #81c784);
+            color: white;
+        }
+        .box {
+            background: white;
+            color: black;
+            padding: 20px;
+            margin: 50px auto;
+            width: 320px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px gray;
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            background-color: #4caf50;
+            color: white;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #388e3c;
+        }
+        #timer {
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box" id="menu">
+    <h2>🎮 Kuis Agama Islam</h2>
+    <button onclick="startGame()">Mulai Game</button>
+</div>
+
+<div class="box" id="game" style="display:none;">
+    <p id="timer"></p>
+    <h3 id="question"></h3>
+    <div id="answers"></div>
+    <p>Skor: <span id="score">0</span></p>
+</div>
+
+<div class="box" id="end" style="display:none;">
+    <h2>🎉 Selesai!</h2>
+    <p id="finalScore"></p>
+    <button onclick="restartGame()">Main Lagi</button>
+</div>
+
+<script>
+const quiz = [
+    {
+        question: "Siapa nabi terakhir?",
+        answers: ["Nabi Musa", "Nabi Isa", "Nabi Ibrahim", "Nabi Muhammad"],
+        correct: 3
+    },
+    {
+        question: "Jumlah rukun Islam?",
+        answers: ["3", "4", "5", "6"],
+        correct: 2
+    },
+    {
+        question: "Kitab suci umat Islam?",
+        answers: ["Al-Qur'an", "Taurat", "Injil", "Zabur"],
+        correct: 0
+    },
+    {
+        question: "Shalat wajib sehari?",
+        answers: ["3", "4", "5", "6"],
+        correct: 2
+    },
+    {
+        question: "Contoh Akhlak Mazmumah?",
+        answers: ["Jujur", "Sombong", "Sopan", "Rajin"],
+        correct: 1
+    },
+    {
+        question: "Contoh Akhlak Mahmudah?",
+        answers: ["Iri", "Riya", "Pemarah", "Ikhlas"],
+        correct: 3
+    },
+];
+
+let current = 0;
+let score = 0;
+let time = 10;
+let timerInterval;
+
+function startGame() {
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("game").style.display = "block";
+    loadQuestion();
+}
+
+function loadQuestion() {
+    clearInterval(timerInterval);
+    time = 10;
+    document.getElementById("timer").innerText = "Waktu: " + time;
+
+    timerInterval = setInterval(() => {
+        time--;
+        document.getElementById("timer").innerText = "Waktu: " + time;
+
+        if (time === 0) {
+            nextQuestion();
+        }
+    }, 1000);
+
+    let q = quiz[current];
+    document.getElementById("question").innerText = q.question;
+
+    let answersHTML = "";
+    q.answers.forEach((ans, index) => {
+        answersHTML += `<button onclick="checkAnswer(${index})">${ans}</button>`;
+    });
+
+    document.getElementById("answers").innerHTML = answersHTML;
+}
+
+function checkAnswer(index) {
+    if (index === quiz[current].correct) {
+        score++;
+        alert("✅ Benar!");
+    } else {
+        alert("❌ Salah!");
+    }
+    document.getElementById("score").innerText = score;
+    nextQuestion();
+}
+
+function nextQuestion() {
+    clearInterval(timerInterval);
+    current++;
+
+    if (current < quiz.length) {
+        loadQuestion();
+    } else {
+        endGame();
+    }
+}
+
+function endGame() {
+    document.getElementById("game").style.display = "none";
+    document.getElementById("end").style.display = "block";
+    document.getElementById("finalScore").innerText = "Skor kamu: " + score;
+}
+
+function restartGame() {
+    current = 0;
+    score = 0;
+    document.getElementById("score").innerText = score;
+    document.getElementById("end").style.display = "none";
+    document.getElementById("menu").style.display = "block";
+}
+</script>
+
+</body>
+</html>
